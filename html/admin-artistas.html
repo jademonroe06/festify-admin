@@ -1,0 +1,90 @@
+<!-- =============================================================
+FILE: admin-artistas.html (Admin · Listado y CRUD de artistas)
+============================================================= -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin · Artistas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-white text-neutral-900" >
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
+  <div class="max-w-7xl mx-auto h-16 px-4 flex items-center justify-between">
+    <a href="./index.html" class="font-semibold">Festify Dashboard</a>
+    <nav class="hidden md:flex items-center gap-4 text-sm">
+      <a class="underline" href="./admin-artistas.html">Artistas</a>
+      <a href="./admin-festivales.html">Festivales</a>
+      <a href="#">Escenarios</a>
+      <a href="#">Entradas</a>
+      <a href="#">Noticias</a>
+      <a href="#">Usuarios</a>
+    </nav>
+  </div>
+</header>
+<main class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-extrabold">Artistas</h1>
+      <p class="text-sm text-neutral-600">Gestiona artistas: crear, editar, eliminar.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <input placeholder="Buscar por nombre o género" class="px-3 py-2 rounded-lg border w-64"/>
+      <a href="./admin-artista-nuevo.html" class="px-3 py-2 rounded-lg bg-neutral-900 text-white text-sm">Nuevo artista</a>
+    </div>
+  </div>
+
+  <div class="mt-6 overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-left border-b">
+          <th class="py-2">Artista</th>
+          <th>Géneros</th>
+          <th>Oyentes</th>
+          <th>País</th>
+          <th>Festivales</th>
+          <th>Estado</th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b hover:bg-neutral-50">
+          <td class="py-2">
+            <div class="flex items-center gap-3">
+              <img class="w-10 h-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=120&auto=format&fit=crop"/>
+              <div>
+                <p class="font-medium">Nombre del Artista</p>
+                <p class="text-xs text-neutral-500">ID: art_001</p>
+              </div>
+            </div>
+          </td>
+          <td>Indie, Electrónica</td>
+          <td>1.2M</td>
+          <td>🇪🇸</td>
+          <td>12</td>
+          <td><span class="px-2 py-1 rounded bg-green-100 text-green-800 text-xs">Activo</span></td>
+          <td class="text-right">
+
+            <a href="./admin-artista-editar.html" class="px-2 py-1 rounded border">Editar</a>
+            <button class="px-2 py-1 rounded border text-red-700">Eliminar</button>
+          </td>
+        </tr>
+        <tr class="border-b hover:bg-neutral-50">
+          <td class="py-2"><div class="flex items-center gap-3"><img class="w-10 h-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=120&auto=format&fit=crop"/><div><p class="font-medium">Artista 2</p><p class="text-xs text-neutral-500">ID: art_002</p></div></div></td>
+          <td>Electrónica</td><td>820k</td><td>🇫🇷</td><td>7</td>
+          <td><span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-xs">Borrador</span></td>
+          <td class="text-right">
+            <a href="./admin-artista-editar.html" class="px-2 py-1 rounded border">Editar</a>
+            <button class="px-2 py-1 rounded border text-red-700">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<!-- Footer -->
+  <footer class="border-t mt-auto">
+    <div class="max-w-4xl mx-auto px-4 py-8 text-sm text-neutral-600 text-center">&copy; 2025 FestivalHub</div>
+  </footer>
+</body>
+</html>

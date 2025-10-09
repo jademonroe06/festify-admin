@@ -1,0 +1,36 @@
+{
+  "artists": [
+    {
+      "id": "ART-1",
+      "name": "Sabrina Carpenter",
+      "genres": [
+        "R&B",
+        "country",
+        "folk pop",
+        "dance-pop",
+        "disco"
+      ],
+      "listeners": 200
+    },
+    {
+      "id": "ART-2",
+      "name": "Bruno Mars",
+      "genres": [
+        "pop",
+        "R&B",
+        "funk",
+        " soul"
+      ],
+      "listeners": 200
+    },
+    {
+      "id": "ART-3",
+      "name": "The Weeknd",
+      "genres": [
+        "R&B/Soul",
+        "Dance/Música electrónica"
+      ],
+      "listeners": 300
+    }
+  ]
+}

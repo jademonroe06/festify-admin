@@ -1,0 +1,95 @@
+<body class="bg-white text-neutral-900 flex flex-col min-h-screen"><!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nuevo artista · FestivalHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-white text-neutral-900">
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
+  <div class="max-w-7xl mx-auto h-16 px-4 flex items-center justify-between">
+    <a href="./index.html" class="font-semibold">Festify Dashboard</a>
+    <nav class="hidden md:flex items-center gap-4 text-sm">
+      <a class="underline" href="./admin-artistas.html">Artistas</a>
+      <a href="./admin-festivales.html">Festivales</a>
+      <a href="#">Escenarios</a>
+      <a href="#">Entradas</a>
+      <a href="#">Noticias</a>
+      <a href="#">Usuarios</a>
+    </nav>
+  </div>
+</header>
+ 
+
+  <!-- Formulario -->
+<main class="max-w-4xl mx-auto px-4 py-8">
+  <a href="./admin-artistas.html" class="text-sm px-3 py-2 rounded-lg border">Volver</a>
+  <div class="max-w-5xl mx-auto h-16 px-4 flex items-center justify-center"><h1 class="font-semibold">Nuevo artista</h1></div>
+  <form class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+      <!-- Nombre -->
+      <div class="sm:col-span-2">
+        <label class="block text-neutral-700 mb-1">Nombre</label>
+        <input type="text" class="w-full px-3 py-2 rounded-lg border" placeholder="Nombre del artista"/>
+      </div>
+
+      <!-- Géneros -->
+      <div>
+        <label class="block text-neutral-700 mb-1">Géneros (coma)</label>
+        <input type="text" class="w-full px-3 py-2 rounded-lg border" placeholder="Indie, Electrónica"/>
+      </div>
+
+      <!-- País -->
+      <div>
+        <label class="block text-neutral-700 mb-1">País</label>
+        <select class="w-full px-3 py-2 rounded-lg border">
+          <option selected>ES</option>
+          <option>FR</option>
+          <option>PT</option>
+          <option>UK</option>
+        </select>
+      </div>
+
+      <!-- Oyentes mensuales -->
+      <div>
+        <label class="block text-neutral-700 mb-1">Oyentes mensuales</label>
+        <input type="number" class="w-full px-3 py-2 rounded-lg border" placeholder="1200000"/>
+      </div>
+
+      <!-- Estado -->
+      <div>
+        <label class="block text-neutral-700 mb-1">Estado</label>
+        <select class="w-full px-3 py-2 rounded-lg border">
+          <option selected>Activo</option>
+          <option>Borrador</option>
+        </select>
+      </div>
+
+      <!-- Biografía -->
+      <div class="sm:col-span-2">
+        <label class="block text-neutral-700 mb-1">Biografía</label>
+        <textarea rows="5" class="w-full px-3 py-2 rounded-lg border" placeholder="Resumen del artista, estilo, trayectoria…"></textarea>
+      </div>
+
+      <!-- Imagen -->
+      <div class="sm:col-span-2">
+        <label class="block text-neutral-700 mb-1">Imagen</label>
+        <input type="file" class="w-full px-3 py-2 rounded-lg border"/>
+        <p class="mt-1 text-xs text-neutral-500">PNG o JPG · máx. 2MB</p>
+      </div>
+
+      <!-- Botones -->
+      <div class="sm:col-span-2 flex items-center gap-3 mt-2">
+        <button class="px-4 py-2 rounded-lg bg-neutral-900 text-white">Guardar artista</button>
+        <button type="reset" class="px-4 py-2 rounded-lg border">Limpiar</button>
+        <button type="button" class="ml-auto px-4 py-2 rounded-lg border text-red-700">Eliminar</button>
+      </div>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t mt-auto">
+    <div class="max-w-4xl mx-auto px-4 py-8 text-sm text-neutral-600 text-center">&copy; 2025 FestivalHub</div>
+  </footer>
+</body>
+</html>
