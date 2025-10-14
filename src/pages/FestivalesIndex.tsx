@@ -55,10 +55,10 @@ export default function FestivalesIndex() {
                             </tr>
 
                             <tr className="border-b hover:bg-neutral-50">
-                                <td className="py-2 font-medium">SunWave Fest</td>
-                                <td>12-14 Jul 2025</td>
-                                <td>Barcelona</td>
-                                <td>Desde 89€</td>
+                                <td className="py-2 font-medium">The Weeknd</td>
+                                <td>28-30 Agosto 2026</td>
+                                <td>Madrid | Londres</td>
+                                <td>Desde 126€/$145 hasta 151€/$670</td>
                                 <td><span className="px-2 py-1 rounded bg-green-100 text-green-800 text-xs">Publicado</span></td>
                                 <td className="text-right">
                                     <a href="./admin-festival-editar.html" className="px-2 py-1 rounded border">Editar</a>

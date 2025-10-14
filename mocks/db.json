@@ -10,7 +10,7 @@
         "dance-pop",
         "disco"
       ],
-      "listeners": 200
+      "oyentes": 600
     },
     {
       "id": "ART-2",
@@ -21,7 +21,7 @@
         "funk",
         " soul"
       ],
-      "listeners": 200
+      "oyentes": 700
     },
     {
       "id": "ART-3",
@@ -30,7 +30,7 @@
         "R&B/Soul",
         "Dance/Música electrónica"
       ],
-      "listeners": 300
+      "oyentes": 500
     }
   ]
 }

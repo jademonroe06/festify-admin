@@ -9,7 +9,7 @@ export default function Artists() {
     const headers = new Headers();
     headers.append("ContentType", `application/json`);
 
-    fetch("http://localhost:8081/artists", { 
+    fetch("http://localhost:8080/artists", {  //Conectarlo con el API  
       method: "GET",
     })
       .then((response) => response.json())
@@ -17,7 +17,7 @@ export default function Artists() {
         setArtists(res);
       })
       .catch((error) => {});
-  }, []);
+  },[]);
 
   // El array vacío [] significa que este efecto se ejecuta solo una vez, al montar el componente.
   // Si hubiera variables en el array, el efecto se ejecutaría cada vez que alguna de esas variables cambie.
@@ -25,11 +25,19 @@ export default function Artists() {
   return (
     <div>
       {artists.map((artist: Artist) => (
-        <h1>{artist.name}</h1> // Renderiza el nombre de cada artista en un encabezado h1
+        <>
+        <h1>{artist.id}</h1>
+        <h1>{artist.name}</h1>
+        <h1>Géneros: {artist.genres}</h1>
+        <h1>Oyentes: {artist.oyentes}</h1>
+        <br></br>
+        </>
       ))}
     </div>
   );
 }
+
+
 
 // En este ejemplo, useEffect simula la carga de datos estableciendo un estado inicial con un artista ficticio.
 // El hook useState se utiliza para agregar estado a componentes funcionales de React.
