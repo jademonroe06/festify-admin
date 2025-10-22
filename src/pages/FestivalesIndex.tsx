@@ -3,14 +3,14 @@ export default function FestivalesIndex() {
         <>
             <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
                 <div className="max-w-7xl mx-auto h-16 px-4 flex items-center justify-between">
-                    <a href="./index.html" className="font-semibold">Festify Dashboard</a>
+                    <a href="/" className="font-semibold">Festify Dashboard</a>
                     <nav className="hidden md:flex items-center gap-4 text-sm">
-                        <a href="./admin-artistas.html">Artistas</a>
-                        <a className="underline" href="./admin-festivales.html">Giras/Festivales/Conciertos</a>
-                        <a href="#">Escenarios</a>
-                        <a href="#">Entradas</a>
-                        <a href="#">Noticias</a>
-                        <a href="#">Usuarios</a>
+                        <a href="/artistas">Artistas</a>
+                        <a className="underline" href="/festivales">Giras/Festivales/Conciertos</a>
+                        <a href="/escenarios">Escenarios</a>
+                        <a href="/entradas">Entradas</a>
+                        <a href="/noticias">Noticias</a>
+                        <a href="/usuarios">Usuarios</a>
                     </nav>
                 </div>
             </header>

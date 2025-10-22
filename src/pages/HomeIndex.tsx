@@ -5,12 +5,12 @@ export default function HomeIndex() {
                 <div className="max-w-7xl mx-auto h-16 px-4 flex items-center justify-between">
                     <a href="./organizador-dashboard.html" className="font-semibold">Festify Dashboard</a>
                     <nav className="hidden md:flex items-center gap-4 text-sm">
-                        <a href="./ArtistasIndex.tsx">Artistas</a>
-                        <a href="./admin-festivales.html">Festivales</a>
-                        <a href="#">Escenarios</a>
-                        <a href="#">Entradas</a>
-                        <a href="#">Noticias</a>
-                        <a href="#">Usuarios</a>
+                        <a href="/artistas">Artistas</a>
+                        <a href="/festivales">Festivales</a>
+                        <a href="/escenarios">Escenarios</a>
+                        <a href="/entradas">Entradas</a>
+                        <a href="/noticias">Noticias</a>
+                        <a href="/usuarios">Usuarios</a>
                     </nav>
                 </div>
             </header>
