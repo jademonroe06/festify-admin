@@ -29,6 +29,13 @@ export default function NewArtist() {
         setForm({...form,[name]:value})
     };*/
 
+
+    //Lo usamos para validar el formulario, y lo mantengo por ahora oculto
+    /*const usseEffect = () => {
+        setFormValid(form.name.length >= 3);
+    }
+    */
+
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, name: e.target.value }));
     };
@@ -62,7 +69,7 @@ export default function NewArtist() {
     };
 
     const handleSubmit = () => {
-        const request: CreateArtistRequest = {
+        const request: CreateArtistRequest = { //El request es una petición que se envía a un servidor para obtener datos o ejecutar una acción, como parte de la comunicación entre un cliente (navegador, aplicación) y un servidor
             name: form.name,
             bio: form.bio,
             country: form.country,
@@ -77,6 +84,12 @@ export default function NewArtist() {
         setFormValid(form.name.length>=3),[form]
     )
 
+    //Se ejecuta cada vez que el "Form" cambia
+
+    function setFormValid(arg0: boolean): import("react").EffectCallback {
+    throw new Error("Función no implementada.");
+    }
+
     //cuando hagamos el submit tenemos que hacer un cambio de string a array
     //porque en la base de datos 'genres' no es un string
 
@@ -88,11 +101,11 @@ export default function NewArtist() {
             >
                 Volver
             </Link>
-
+ 
             <div className="max-w-5xl mx-auto h-16 px-4 flex items-center justify-center">
-                <h1 className="font-semibold">Nuevo artista</h1>
+                <h1 className="font-semibold">Ingrese los datos del nuevo artista</h1>
             </div>
-
+ 
             <form
                 className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm"
                 onSubmit={handleSubmit}
@@ -101,7 +114,7 @@ export default function NewArtist() {
             >
                 <div className="sm:col-span-2">
                     <label className="block text-neutral-700 mb-1" htmlFor="name">
-                        Nombre <span className="text-red-600">*</span>
+                        Nombre del artista <span className="text-red-600">*</span>
                     </label>
                     <input
                         id="name"
@@ -114,10 +127,10 @@ export default function NewArtist() {
                         required
                     />
                 </div>
-
+ 
                 <div>
                     <label className="block text-neutral-700 mb-1" htmlFor="genres">
-                        Géneros (separados por coma)
+                        Géneros (ingreselo separados por coma)
                     </label>
                     <input
                         id="genres"
@@ -129,7 +142,7 @@ export default function NewArtist() {
                         onChange={handleGenresChange}
                     />
                 </div>
-
+ 
                 <div>
                     <label className="block text-neutral-700 mb-1" htmlFor="country">
                         País
@@ -147,7 +160,7 @@ export default function NewArtist() {
                         <option value="UK">UK</option>
                     </select>
                 </div>
-
+ 
                 <div>
                     <label className="block text-neutral-700 mb-1" htmlFor="listeners">
                         Oyentes mensuales
@@ -164,10 +177,10 @@ export default function NewArtist() {
                         onChange={handleListenersChange}
                     />
                     <p className="text-neutral-500 mt-1">
-                        Solo números. Déjalo vacío si no lo sabes.
+                        Si no tienes la información de los oyentes, dejalo en blanco.
                     </p>
                 </div>
-
+ 
                 <div>
                     <label className="block text-neutral-700 mb-1" htmlFor="status">
                         Estado
@@ -183,10 +196,10 @@ export default function NewArtist() {
                         <option value="Borrador">Borrador</option>
                     </select>
                 </div>
-
+ 
                 <div className="sm:col-span-2">
                     <label className="block text-neutral-700 mb-1" htmlFor="bio">
-                        Biografía
+                        Biografía del artista
                     </label>
                     <textarea
                         id="bio"
@@ -198,23 +211,24 @@ export default function NewArtist() {
                         onChange={handleBioChange}
                     />
                 </div>
-
+ 
                 <div className="sm:col-span-2 flex items-center gap-3 mt-2">
                     <button
                         type="submit"
                         className="px-4 py-2 rounded-lg bg-neutral-900 text-white disabled:opacity-60"
                         disabled={false}
                     >
-                        {"Guardar artista"}
+                        {"Guardar datos del artista"}
                     </button>
-
+ 
                     <button type="reset" className="px-4 py-2 rounded-lg border" disabled={false}>
                         Limpiar
                     </button>
-
+ 
                 </div>
             </form>
-
+ 
         </main>
     )
 }
+

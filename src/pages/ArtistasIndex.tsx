@@ -1,43 +1,63 @@
-/*import type { Artist } from "@/types/artist";
-import { useEffect, useState } from "react";*/
+import type { Artist } from "@/types/artist";  // Asegúrate de que Artist incluya: id, name, genres, listeners, country?, festivals?, status?, image?
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";  // Asume React Router para navegación interna
 
-/*export default function Artists() {
-  const [artists, setArtists] = useState<Artist[]>([]); // Estado inicial vacío, esperando a que se carguen los datos
+export default function ArtistasIndex() {
+  const [artists, setArtists] = useState<Artist[]>([]);  // Estado inicial vacío, esperando a que se carguen los datos
+  const [loading, setLoading] = useState(true);  // Indicador de carga
+  const [searchTerm, setSearchTerm] = useState("");  // Para búsqueda básica
 
   useEffect(() => {
     console.log("cargando artistas....");
     const headers = new Headers();
-    headers.append("ContentType", `application/json`);
+    // headers.append("ContentType", `application/json`);  // Comentado: No necesario para GET, y estaba mal escrito (debería ser "Content-Type")
 
     fetch("http://localhost:8081/artists", {      
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((res) => {
         setArtists(res);
+        setLoading(false);
+        console.log("Artistas cargados:", res);
       })
-      .catch((error) => {});
-  },[]);
-
-  // El array vacío [] significa que este efecto se ejecuta solo una vez, al montar el componente.
+      .catch((error) => {
+        console.error("Error al cargar artistas:", error);
+        setLoading(false);
+      });
+  }, []);  // El array vacío [] significa que este efecto se ejecuta solo una vez, al montar el componente.
   // Si hubiera variables en el array, el efecto se ejecutaría cada vez que alguna de esas variables cambie.
 
-  return (
-    <div>
-      {artists.map((artist: Artist) => (
-        <>
-        <h1>{artist.id}</h1>
-        <h1>{artist.name}</h1>
-        <h1>Géneros: {artist.genres}</h1>
-        <h1>Oyentes: {artist.oyentes}</h1>
-        <br></br>
-        </>
-      ))}
-    </div>
-  );
-}*/
+  // Función para eliminar artista (DELETE a la API)
+  const handleDelete = async (id: number) => {
+    if (!confirm("¿Estás seguro de eliminar este artista?")) return;
+    try {
+      const response = await fetch(`http://localhost:8081/artists/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Error al eliminar");
+      // Actualizar estado removiendo el artista
+      setArtists(artists.filter(artist => artist.id !== id));
+      alert("Artista eliminado");
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+      alert("Error al eliminar artista");
+    }
+  };
 
-export default function ArtistasIndex() {
+  // Filtrar artistas por búsqueda (básico: nombre o géneros)
+  const filteredArtists = artists.filter(artist =>
+    artist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    artist.genres.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) return <p>Cargando artistas...</p>;
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
@@ -45,7 +65,7 @@ export default function ArtistasIndex() {
           <a href="/" className="font-semibold">Festify Dashboard</a>
           <nav className="hidden md:flex items-center gap-4 text-sm">
             <a className="underline" href="/artistas">Artistas</a>
-            <a href="/festivales">Festivales/Giras</a>
+            <a href="/festivales">Festivales y Giras</a>
             <a href="/escenarios">Escenarios</a>
             <a href="/entradas">Entradas</a>
             <a href="/noticias">Noticias</a>
@@ -56,12 +76,19 @@ export default function ArtistasIndex() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-extrabold">Artistas</h1>
-            <p className="text-sm text-neutral-600">Gestiona artistas: crear, editar, eliminar.</p>
+            <h1 className="text-2xl font-extrabold">Listado de Artistas</h1>
+            <p className="text-sm text-neutral-600">Gestión de artistas: Crea, Edita o Elimina</p>
           </div>
           <div className="flex items-center gap-2">
-            <input placeholder="Buscar por nombre o género" className="px-3 py-2 rounded-lg border w-64" />
-            <a href="/artistas/nuevoArtista" className="px-3 py-2 rounded-lg bg-neutral-900 text-white text-sm">Nuevo artista</a>
+            <input
+              placeholder="Buscar por nombre o género"
+              className="px-3 py-2 rounded-lg border w-64"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Link to="/artistas/nuevoArtista" className="px-3 py-2 rounded-lg bg-neutral-900 text-white text-sm">
+              Agrega un Artista
+            </Link>
           </div>
         </div>
 
@@ -69,126 +96,55 @@ export default function ArtistasIndex() {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left border-b">
-                <th className="py-2">Artista</th>
+                <th className="py-2">Lista: Artista más imagen</th>
                 <th>Géneros</th>
                 <th>Oyentes</th>
                 <th>Países</th>
                 <th>Festivales - Giras</th>
-                <th>Estado</th>
+                <th>Estado actual</th>
                 <th className="text-right">Acciones</th>
               </tr>
             </thead>
+
             <tbody>
-              <tr className="border-b hover:bg-neutral-50">
-                <td className="py-2">
-                  <div className="flex items-center gap-3">
-                    <img className="w-30 h-30 rounded-md object-cover" src="https://storage.googleapis.com/pr-newsroom-wp/1/2025/01/Bruno_Backyard_IG_Posted_SQUARE-1440x1440.jpeg" />
-                    <div>
-                      <p className="font-medium">Bruno Mars</p>
-                      <p className="text-xs text-neutral-500">ID: art_001</p>
+              {filteredArtists.map((artist: Artist) => (
+                <tr key={artist.id} className="border-b hover:bg-neutral-50">
+                  <td className="py-2">
+                    <div className="flex items-center gap-3">
+                      <img
+                        className="w-30 h-30 rounded-md object-cover"
+                        alt={artist.name}
+                      />
+                      <div>
+                        <p className="font-medium">{artist.name}</p>
+                        <p className="text-xs text-neutral-500">ID: {artist.id}</p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>Pop/R&B/Funk/Reggae/Rock/hip-hop</td>
-                <td>150M</td>
-                <td>🇺🇸, 🇪🇺</td>
-                <td>3</td>
-                <td><span className="px-2 py-1 rounded bg-red-300 text-red-800 text-xs">Inactivo</span></td>
-                <td className="text-right">
-
-                  <a href="./admin-artista-editar.html" className="px-2 py-1 rounded border">Editar</a>
-                  <button className="px-2 py-1 rounded border text-red-700">Eliminar</button>
-                </td>
-              </tr>
-
-              <tr className="border-b hover:bg-neutral-50">
-                <td className="py-2">
-                  <div className="flex items-center gap-3">
-                    <img className="w-30 h-30 rounded-md object-cover" src="https://www.byrdie.com/thmb/Tz-kP35D4tvUkpwSgZIh9aWkT_0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/sabrinacarpenterfauxbob-1ed6cdb5e4e6471b92b09b5806f5cda5.png" />
-                    <div>
-                      <p className="font-medium">Sabrina Carpenter</p>
-                      <p className="text-xs text-neutral-500">ID: art_002</p>
-                    </div>
-                  </div>
-                </td>
-                <td>Pop - folk-pop, electropop, dance-pop, R&B</td>
-                <td>48.9M</td>
-                <td>🇺🇸, 🇯🇵, 🇪🇺</td>
-                <td>6</td>
-                <td><span className="px-2 py-1 rounded bg-green-100 text-green-800 text-xs">Activo</span></td>
-                <td className="text-right">
-
-                  <a href="./admin-artista-editar.html" className="px-2 py-1 rounded border">Editar</a>
-                  <button className="px-2 py-1 rounded border text-red-700">Eliminar</button>
-                </td>
-              </tr>
-
-              <tr className="border-b hover:bg-neutral-50">
-                <td className="py-2">
-                  <div className="flex items-center gap-3">
-                    <img className="w-30 h-30 rounded-md object-cover" src="https://m.media-amazon.com/images/I/71NpQfpYUiL.jpg" />
-                    <div>
-                      <p className="font-medium">The Weeknd</p>
-                      <p className="text-xs text-neutral-500">ID: art_003</p>
-                    </div>
-                  </div>
-                </td>
-                <td>R&B/Soul</td>
-                <td>115.7M</td>
-                <td>🇺🇸, 🇪🇺</td>
-                <td>5</td>
-                <td><span className="px-2 py-1 rounded bg-red-300 text-red-800 text-xs">Inactivo</span></td>
-                <td className="text-right">
-
-                  <a href="./admin-artista-editar.html" className="px-2 py-1 rounded border">Editar</a>
-                  <button className="px-2 py-1 rounded border text-red-700">Eliminar</button>
-                </td>
-              </tr>
-
-              <tr className="border-b hover:bg-neutral-50">
-                <td className="py-2">
-                  <div className="flex items-center gap-3">
-                    <img className="w-30 h-30 rounded-md object-cover" src="https://ew.com/thmb/f8ykaNHX65KntowqQfQ2NQPPv8w=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Harry-Styles-092225-1-a008f7bcfc4d4722b0d8f437d0edf81b.jpg" />
-                    <div>
-                      <p className="font-medium">Harry Styles</p>
-                      <p className="text-xs text-neutral-500">ID: art_004</p>
-                    </div>
-                  </div>
-                </td>
-                <td>Pop/Glam Rock/Soft Rock</td>
-                <td>57.6M</td>
-                <td>🇺🇸, 🇯🇵, 🇪🇺, 🇦🇺, Asia</td>
-                <td>2</td>
-                <td><span className="px-2 py-1 rounded bg-green-100 text-green-800 text-xs">Activo</span></td>
-                <td className="text-right">
-
-                  <a href="./admin-artista-editar.html" className="px-2 py-1 rounded border">Editar</a>
-                  <button className="px-2 py-1 rounded border text-red-700">Eliminar</button>
-                </td>
-              </tr>
-
-              <tr className="border-b hover:bg-neutral-50">
-                <td className="py-2">
-                  <div className="flex items-center gap-3">
-                    <img className="w-30 h-30 rounded-md object-cover" src="https://hips.hearstapps.com/hmg-prod/images/dua-lipa-attends-the-chanel-haute-couture-spring-summer-news-photo-1738513564.pjpeg?crop=0.668xw:1.00xh;0.245xw,0&resize=640:*" />
-                    <div>
-                      <p className="font-medium">Dua Lipa</p>
-                      <p className="text-xs text-neutral-500">ID: art_005</p>
-                    </div>
-                  </div>
-                </td>
-                <td>Dance-pop/Disco/Electropop/R&B</td>
-                <td>70M</td>
-                <td>🇺🇸, 🇪🇺</td>
-                <td>4</td>
-                <td><span className="px-2 py-1 rounded bg-red-300 text-red-800 text-xs">Inactivo</span></td>
-                <td className="text-right">
-
-                  <a href="./admin-artista-editar.html" className="px-2 py-1 rounded border">Editar</a>
-                  <button className="px-2 py-1 rounded border text-red-700">Eliminar</button>
-                </td>
-              </tr>
-
+                  </td>
+                  <td>{artist.genres}</td>
+                  <td>{artist.listeners}M</td>  {/* Corregido: usa 'listeners' en lugar de 'oyentes' */}
+                  <td>{artist.country || "N/A"}</td>
+                  <td>{artist.festivals || 0}</td>
+                  <td>
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      artist.status === "Activo" ? "bg-green-100 text-green-800" : "bg-red-300 text-red-800"
+                    }`}>
+                      {artist.status || "Inactivo"}
+                    </span>
+                  </td>
+                  <td className="text-right">
+                    <Link to={`/artistas/editar/${artist.id}`} className="px-2 py-1 rounded border">
+                      Editar
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(artist.id)}
+                      className="px-2 py-1 rounded border text-red-700"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -199,8 +155,10 @@ export default function ArtistasIndex() {
           {new Date().getFullYear()} © Festify. Todos los derechos reservados.
         </div>
       </footer>
-    </>)
+    </>
+  );
 }
+
 
 // En este ejemplo, useEffect simula la carga de datos estableciendo un estado inicial con un artista ficticio.
 // El hook useState se utiliza para agregar estado a componentes funcionales de React.

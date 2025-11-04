@@ -23,7 +23,7 @@ export default function HomeIndex() {
 
             <footer className="border-t mt-auto">
                 <div className="max-w-4xl mx-auto px-4 py-8 text-sm text-neutral-600 text-center">
-                    {new Date().getFullYear()} © Festify. Todos los derechos reservados.
+                    {new Date().getFullYear()} © Festify. Todos los derechos reservados ©FernandoJosueTocasNores 🇵🇪.
                 </div>
             </footer>
         </>)
