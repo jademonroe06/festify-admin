@@ -1,6 +1,6 @@
 import type { CreateArtistRequest } from "@/types/CreateArtistRequest";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type ArtistForm = {
     name: string;
@@ -23,18 +23,28 @@ const defaultForm: ArtistForm = {
 export default function NewArtist() {
     //crea un objeto nuevo
     const [form, setForm] = useState<ArtistForm>(defaultForm);
+    const [formIsValid, setFormIsValid] = useState<boolean>;
+    const navigate = useNavigate(); // se refiere a la función o método que permite cambiar de pantalla o vista en una aplicación
 
-    /*const handleFormChange = (e:any):void => { //para el examen, general y menos lioso
+    
+    let buttonStyle = "px-4 py-2 rounded-lg bg-neutral-900 text-white disabled:opacity-60" //permite definir un estilo visual y de interacción para los botones de forma centralizada y reutilizable
+
+    useEffect(()=>{
+        setFormIsValid(form.name.length>3)
+
+    },[form]) 
+    
+    const handleFormChange = (e:any):void => { //para el examen, general y menos lioso
         const { name, value } = e.target;
         setForm({...form,[name]:value})
-    };*/
+    };
 
 
     //Lo usamos para validar el formulario, y lo mantengo por ahora oculto
-    /*const usseEffect = () => {
+    const usseEffect = () => {
         setFormValid(form.name.length >= 3);
     }
-    */
+
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, name: e.target.value }));
@@ -68,8 +78,8 @@ export default function NewArtist() {
         setForm(defaultForm);
     };
 
-    const handleSubmit = () => {
-        const request: CreateArtistRequest = { //El request es una petición que se envía a un servidor para obtener datos o ejecutar una acción, como parte de la comunicación entre un cliente (navegador, aplicación) y un servidor
+    const handleCreateArtistRequest = () => {
+        const request: ArtistRequest = { //El request es una petición que se envía a un servidor para obtener datos o ejecutar una acción, como parte de la comunicación entre un cliente (navegador, aplicación) y un servidor
             name: form.name,
             bio: form.bio,
             country: form.country,
@@ -77,7 +87,15 @@ export default function NewArtist() {
             genres: form.genres.split(','),
             listeners: Number(form.listeners),
         }
-
+    const = await CreateArtist(request);
+    if("id" in response ) {
+        const artistResponse = response as Artist;
+        alert ("El artista ha sido creado con id: "+artistResponse);
+        navigate ("/artist")
+    }else{
+        const errorResponse = response as ErrorAPIResponse;
+        alert("El artista a sido sido creado correctamente: "+errorResponse.detail)
+    }
     };
 
     useEffect(
@@ -215,7 +233,7 @@ export default function NewArtist() {
                 <div className="sm:col-span-2 flex items-center gap-3 mt-2">
                     <button
                         type="submit"
-                        className="px-4 py-2 rounded-lg bg-neutral-900 text-white disabled:opacity-60"
+                        className={buttonStyle}
                         disabled={false}
                     >
                         {"Guardar datos del artista"}
@@ -231,4 +249,3 @@ export default function NewArtist() {
         </main>
     )
 }
-

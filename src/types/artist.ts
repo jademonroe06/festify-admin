@@ -1,40 +1,21 @@
-import type { ReactNode } from "react";
-import type { Artist } from "@/types/artist";
-//Validando datos del formulario: import { useEffect, useState } from "react";
-
-
-export type Artist {
+export type Artist = {
   festivals: number;
-  listeners: ReactNode;
-  oyentes: ReactNode;
-  id: number;
+  id: string;
   name: string;
   genres: string[];
   country: string;
   totalFestivals: number;
+  listeners: number;
   status: "Activo" | "Borrador";
+  biography: string;
 };
 
-/*export default function Artists() {
-  const [artists, setArtists] = useState<Artist[]>([]);
- 
-  useEffect(() => {
-    console.log("cargando artistas....");
- 
-    fetch("http://localhost:4567/artists", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        setArtists(res);
-      });
-  }, []);
- 
-  return (
-    <div>
-      {artists.map((artist: Artist) => (
-        <h1>{artist.name}</h1>
-      ))}
-    </div>
-  );
-}*/
+export type ArtistRequest = {
+  id?: string;
+  name: string;
+  genres: string[];
+  country: string;
+  listeners: number;
+  status: "Activo" | "Borrador";
+  biography: string;
+};

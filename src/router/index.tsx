@@ -1,19 +1,20 @@
-import { createBrowserRouter } from "react-router-dom";
+//Paso 1. Iniciamos definiendo las rutas
+import {createBrowserRouter} from "react-router-dom";
+import Home from "@/pages/Home";
 import PageNotFound from "@/pages/PageNotFound";
-import HomeIndex from "@/pages/HomeIndex";
-import ArtistasIndex from "@/pages/ArtistasIndex";
-import FestivalesIndex from "@/pages/FestivalesIndex";
-import NuevoArtistaIndex from "@/pages/NuevoArtista";
-import EditarArtista from "@/pages/EditarArtista";
+import ListArtists from "@/pages/ListArtist.tsx";
+import NewArtist from "@/pages/NewArtist.tsx";
+import EditArtist from "@/pages/EditArtist.tsx";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <HomeIndex /> },
-  { path: "/artistas", element: <ArtistasIndex /> },
-  { path: "/artistas/nuevoArtista", element: <NuevoArtistaIndex /> }, 
-  { path: "/artistas/editar/:id", element: <EditarArtista /> },
-  { path: "/festivales", element: <FestivalesIndex /> },
-  { path: "*", element: <PageNotFound /> },
+
+    {path: "/", element: <Home />},
+    {path: "/artists", element: <ListArtists />},
+    {path: "/new-artist", element: <NewArtist />},
+    {path: "/edit-artist/:id", element: <EditArtist />},
+    {path: "*", element: <PageNotFound />},
 ]);
+
 
 //El "useEffect" se usa para cargar los datos del artista cuando el componente se monta y se ejecuta con un ([]). "Escucha cosas"
 //Si solo usamos el "useEffect() sin el array vacío, se ejecutará cada vez que el componente se renderice."

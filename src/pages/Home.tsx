@@ -3,7 +3,7 @@ export default function HomeIndex() {
         <>
             <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
                 <div className="max-w-7xl mx-auto h-16 px-4 flex items-center justify-between">
-                    <a href="./organizador-dashboard.html" className="font-semibold">Festify Dashboard</a>
+                    <a href="./organizador-dashboard.html" className="font-semibold">Festify Dashboard - Fernando Tocas</a>
                     <nav className="hidden md:flex items-center gap-4 text-sm">
                         <a href="/artistas">Artistas</a>
                         <a href="/festivales">Festivales</a>
@@ -28,3 +28,5 @@ export default function HomeIndex() {
             </footer>
         </>)
 }
+
+//El link to sirve para crear enlaces (o hipervínculos) que conectan diferentes páginas web, archivos o secciones dentro de la misma página.
