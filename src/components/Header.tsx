@@ -1,3 +1,4 @@
+//Aquí definimos las rutas, que es lo primero que tenemos que hacer en el examen.
 import {Link} from "react-router-dom";
 
 export default function Header(){

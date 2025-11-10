@@ -1,222 +1,203 @@
-import Header from "@/components/Header.tsx";
-import Footer from "@/components/Footer.tsx";
-import {type ChangeEvent, useEffect, useState} from "react";
-import {Link, useNavigate, useParams, type ErrorResponse} from "react-router-dom";
-import type {Artist, ArtistRequest} from "@/types/artist.ts";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import type { Artist, ArtistRequest } from "@/types/artist";
 
-
+/**
+ * Formulario local simplificado
+ */
 type ArtistForm = {
-    id: string;
-    name: string;
-    genres: string;
-    country: string;
-    listeners: "" | number;
-    status: "Activo" | "Borrador";
-    biography:string;
+  name: string;
+  genres: string;
+  country: string;
+  listeners: number | "";
+  status: "Activo" | "Borrador";
+  biography: string;
+};
+
+const defaultForm: ArtistForm = {
+  name: "",
+  genres: "",
+  country: "ES",
+  listeners: "",
+  status: "Borrador",
+  biography: "",
+};
+
+/**
+ * Funciones simuladas de API (reemplázalas con tus funciones reales)
+ */
+async function getArtist(id: string): Promise<Artist> {
+  const res = await fetch(`/api/artists/${id}`);
+  if (!res.ok) throw new Error("No se pudo cargar el artista");
+  return await res.json();
 }
 
-const defaultArtistForm:ArtistForm = {
-    id: "",
-    name: "",
-    genres: "",
-    country: "ES",
-    listeners: 0,
-    status: "Activo",
-    biography: "",
+async function updateArtist(id: string, request: ArtistRequest): Promise<Artist> {
+  const res = await fetch(`/api/artists/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+  });
+  if (!res.ok) throw new Error("Error al actualizar el artista");
+  return await res.json();
 }
 
-export default function EditArtist(){
+/**
+ * Componente principal
+ */
+export default function EditArtist() {
+  const [form, setForm] = useState<ArtistForm>(defaultForm);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-    const [form,setForm] = useState<ArtistForm>(defaultArtistForm);
-    const [formOriginal, setFormOriginal] = useState<ArtistForm>(defaultArtistForm);
-    const [isValid, setValid] = useState<boolean>(false);
-    const {id} = useParams();
-    const [error, setError] = useState<string>();
-    const navigate = useNavigate();
-
-    useEffect(()=>{
-        if (id){
-            getArtist(id).then((res:Artist|ErrorResponse)=>{
-                if ("id" in res){
-                    const artist:Artist = res as Artist;
-                    setForm({
-                        ...artist,
-                        genres: artist.genres.join(", ")
-                    })
-                    setFormOriginal({
-                        ...artist,
-                        genres: artist.genres.join(", ")
-                    });
-                }else{
-                    const errorResponse:ErrorResponse = res as ErrorResponse;
-                    setError(errorResponse.detail);
-                }
-            }).catch((err)=>{
-                setError(err?.message ?? "Error cargando el usuario");
-            });
-        }
-    },[])
-
-    useEffect(()=>{
-        setValid(
-            form.name.trim().length>2 &&
-            form.genres.trim().length>2);
-    },[form])
-
-    const handleNameOnChange = (evt : ChangeEvent<HTMLInputElement>)=> {
-        const  {value} = evt.target;
+  // ✅ Cargar datos del artista al iniciar
+  useEffect(() => {
+    if (!id) return;
+    getArtist(id)
+      .then((artist) => {
         setForm({
-            ...form,
-            name: value,
-        })
+          name: artist.name,
+          genres: artist.genres.join(", "),
+          country: artist.country,
+          listeners: artist.listeners,
+          status: artist.status as "Activo" | "Borrador",
+          biography: artist.biography || "",
+        });
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  // ✅ Cambiar los campos
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // ✅ Enviar el formulario
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!id) return alert("No se encontró el ID del artista.");
+
+    const request: ArtistRequest = {
+      name: form.name,
+      biography: form.biography,
+      country: form.country,
+      status: form.status,
+      genres: form.genres.split(",").map((g) => g.trim()),
+      listeners: form.listeners === "" ? 0 : Number(form.listeners),
+    };
+
+    try {
+      await updateArtist(id, request);
+      alert("Artista actualizado con éxito.");
+      navigate("/artists");
+    } catch (err: any) {
+      alert(err.message || "Error al actualizar el artista.");
     }
+  };
 
-    const handleGenresOnChange = (evt : ChangeEvent<HTMLInputElement>)=> {
-        const  {value} = evt.target;
-        setForm({
-            ...form,
-            genres: value,
-        })
-    }
+  // ✅ Resetear el formulario
+  const handleReset = () => setForm(defaultForm);
 
-    const handleCountryOnChange = (evt : ChangeEvent<HTMLSelectElement>)=> {
-        const  {value} = evt.target;
-        setForm({
-            ...form,
-            country: value,
-        })
-    }
+  if (loading) return <p className="text-center mt-10">Cargando...</p>;
+  if (error)
+    return (
+      <p className="text-center mt-10 text-red-500">
+        Error al cargar el artista: {error}
+      </p>
+    );
 
-    const handleBiographyOnChange = (evt : ChangeEvent<HTMLTextAreaElement>)=> {
-        const  {value} = evt.target;
-        setForm({
-            ...form,
-            biography: value,
-        })
-    }
+  return (
+    <>
+      <Header />
+      <main className="max-w-3xl mx-auto px-4 py-8">
+        <Link to="/artists" className="text-sm px-3 py-2 rounded-lg border">
+          Volver
+        </Link>
 
-    const handleStatusOnChange = (evt : ChangeEvent<HTMLSelectElement>)=> {
-        const  {value} = evt.target;
-        setForm({
-            ...form,
-            status: value === 'Activo' ? 'Activo' : 'Borrador',
-        })
-    }
+        <h1 className="text-center text-xl font-semibold mt-4 mb-6">
+          Editar artista
+        </h1>
 
-    const handleListenersOnChange = (evt : ChangeEvent<HTMLInputElement>)=> {
-        const  {value:valueText} = evt.target;
-        const value = Number(valueText);
-        setForm({
-            ...form,
-            listeners: value,
-        })
-    }
+        <form onSubmit={handleSubmit} onReset={handleReset} className="grid gap-4 text-sm">
+          <input
+            name="name"
+            placeholder="Nombre del artista"
+            value={form.name}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded-lg"
+            required
+          />
 
-    const handleReset = () => {
-        setForm(formOriginal);
-    }
+          <input
+            name="genres"
+            placeholder="Géneros (separados por coma)"
+            value={form.genres}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded-lg"
+          />
 
-    if (error) {
-        return <>
-            <Header/>
-            <div className="flex flex-col items-center justify-center h-screen text-center p-4">
-                <h1 className="text-6xl font-bold text-red-500">Error</h1>
-                <h2 className="text-2xl mt-4">Error inesperado</h2>
-                <p className="text-gray-600 mt-2">
-                    {error}
-                </p>
-                <Link
-                    to="/"
-                    className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                >
-                    Volver al inicio
-                </Link>
-            </div>
-            <Footer/>
-        </>
-    }
+          <select
+            name="country"
+            value={form.country}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded-lg"
+          >
+            <option value="ES">España</option>
+            <option value="FR">Francia</option>
+            <option value="PT">Portugal</option>
+            <option value="UK">Reino Unido</option>
+          </select>
 
-    const handleSubmitForm = async (e:React.FormEvent<HTMLFormElement>) =>{
-        e.preventDefault();
-        if (!id){
-            return;
-        }
-        const request:ArtistRequest = {
-            ...form,
-            listeners:form.listeners==""?0 :form.listeners,
-            genres: form.genres.split(",").map(a=>a.trim()),
-        }
-        try{
-            const response = await updateArtist(id, request);
-            if ("id" in response) {
-                const artist: Artist = response as Artist;
-                alert(`Artista con id ${artist.id} ha sido actualizado con éxito.`);
-                navigate('/artists');
-            } else {
-                const error: ErrorResponse = response as ErrorResponse;
-                alert(error.detail);
-            }
-        }catch(err:any){
-            console.log(err)
-            alert(err?.message ??  'Error desconocido');
-        };
+          <input
+            name="listeners"
+            placeholder="Oyentes mensuales"
+            value={form.listeners}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded-lg"
+            inputMode="numeric"
+          />
 
-    }
+          <select
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded-lg"
+          >
+            <option value="Activo">Activo</option>
+            <option value="Borrador">Borrador</option>
+          </select>
 
-    const btnSaveClassnames = "px-4 py-2 rounded-lg text-white "+(isValid?"bg-green-900":"bg-gray-400");
+          <textarea
+            name="biography"
+            placeholder="Biografía del artista"
+            rows={4}
+            value={form.biography}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded-lg"
+          />
 
-    return <>
-        <Header/>
-        <main className="max-w-4xl mx-auto px-4 py-8">
-            <Link to="/artists" className="text-sm px-3 py-2 rounded-lg border">Volver</Link>
-            <div className="max-w-5xl mx-auto h-16 px-4 flex items-center justify-center"><h1
-                className="font-semibold">Editar artista</h1></div>
-            <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="sm:col-span-2">
-                    <label className="block text-neutral-700 mb-1">Nombre</label>
-                    <input type="text" value={form.name}  onChange={handleNameOnChange} className="w-full px-3 py-2 rounded-lg border" placeholder="Nombre del artista"/>
-                </div>
-                <div>
-                    <label className="block text-neutral-700 mb-1">Géneros (coma)</label>
-                    <input type="text" value={form.genres} onChange={handleGenresOnChange}  className="w-full px-3 py-2 rounded-lg border" placeholder="Indie, Electrónica"/>
-                </div>
-                <div>
-                    <label className="block text-neutral-700 mb-1">País</label>
-                    <select value={form.country}  onChange={handleCountryOnChange} className="w-full px-3 py-2 rounded-lg border">
-                        <option>ES</option>
-                        <option>FR</option>
-                        <option>PT</option>
-                        <option>UK</option>
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-neutral-700 mb-1">Oyentes mensuales</label>
-                    <input type="number" onChange={handleListenersOnChange} value={form.listeners} className="w-full px-3 py-2 rounded-lg border" placeholder="1200000"/>
-                </div>
-                <div>
-                    <label className="block text-neutral-700 mb-1">Estado</label>
-                    <select value={form.status} onChange={handleStatusOnChange}  className="w-full px-3 py-2 rounded-lg border">
-                        <option>Activo</option>
-                        <option>Borrador</option>
-                    </select>
-                </div>
-
-                <div className="sm:col-span-2">
-                    <label className="block text-neutral-700 mb-1">Biografía</label>
-                    <textarea rows={5} className="w-full px-3 py-2 rounded-lg border"
-                              placeholder="Resumen del artista, estilo, trayectoria…" onChange={handleBiographyOnChange} value={form.biography}/>
-                </div>
-                <div className="sm:col-span-2 flex items-center gap-3 mt-2">
-
-                    <button type="reset" onClick={handleReset} className="px-4 py-2 rounded-lg border">Deshacer cambios</button>
-                    <button disabled={!isValid}  className={btnSaveClassnames} onClick={handleSubmitForm}>Guardar artista</button>
-                </div>
-            </form>
-        </main>
-        <Footer/>
+          <div className="flex gap-3 mt-2">
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-lg bg-black text-white"
+            >
+              Guardar
+            </button>
+            <button type="reset" className="px-4 py-2 rounded-lg border">
+              Limpiar
+            </button>
+          </div>
+        </form>
+      </main>
+      <Footer />
     </>
-}
-
-function updateArtist(id: string, request: ArtistRequest) {
-    throw new Error("Function not implemented.");
+  );
 }
